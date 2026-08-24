@@ -21,14 +21,14 @@ Grok Build는 `~/.grok/rules/*.md`를 전역 규칙으로 상시 로드하므로
 
 ```powershell
 # Windows
-git clone https://github.com/BaeHyeonSeong/agents-md
+git clone https://github.com/kkp8121-rgb/agents-md
 cd agents-md
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
 ```bash
 # macOS / Linux
-git clone https://github.com/BaeHyeonSeong/agents-md
+git clone https://github.com/kkp8121-rgb/agents-md
 cd agents-md
 sh install.sh
 ```
