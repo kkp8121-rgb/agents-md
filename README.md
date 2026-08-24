@@ -50,7 +50,8 @@ sh install.sh
 | 변경 | 이유 |
 |---|---|
 | 섹션 10(프로젝트 TODO 템플릿 35줄) 제거 | 전역 배치 시 죽은 무게 — 리포별 AGENTS.md로 이관 |
-| "Token and context discipline" 섹션 신설 | 재Read 금지·추론 깊게 출력 간결히 (token-efficient 발췌) + 서브에이전트 위임 |
+| "Token and context discipline" 섹션 신설 | 재Read 금지·추론 깊게 출력 간결히 (token-efficient 발췌) |
+| **"Delegation and parallel orchestration" 섹션 신설** | 모델 티어 라우팅(3개 하네스 대조표)·팀 사이징·충돌 사전확인·위임 결과 실측검증·고위험 다중 리뷰. 근거는 Anthropic 공식 문서 + pro-workflow(2.8k★)·CCW(2.1k★) 실측 |
 | 완료 주장 시 fresh 검증 증거 의무화 | 증거 없는 완료 선언 금지 원칙 |
 | 사용자 대면 텍스트 존댓말 한국어 | 개인 선호 (코드·커밋은 리포 관례) |
 | Co-Authored-By 금지 조항 → 리포 관례 따름 | 일부 프로젝트는 attribution 필수라 충돌 |

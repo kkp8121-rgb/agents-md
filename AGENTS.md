@@ -78,13 +78,41 @@ For every task: state success criteria → write the verification → run it →
 
 - Context is the constraint. Read files before writing; **do not re-read files that have not changed.**
 - **Thorough in reasoning, concise in output.** Depth belongs in thinking, not in ceremony.
-- Delegate exploration (many file reads, broad searches) to subagents; keep the main context for decisions.
+- Delegate exploration (many file reads, broad searches) to subagents — see section 7. Keep the main context for decisions.
 - After two failed corrections on the same issue, stop. Summarize what you learned and suggest a fresh session with a sharper prompt.
 - Do not restate the question, do not pad summaries, do not repeat unchanged plans.
 
 ---
 
-## 7. Communication
+## 7. Delegation and parallel orchestration
+
+**Delegate to protect the main context, not to look busy.** Multi-agent runs cost roughly 15x a plain chat in tokens, so the work has to earn it. Most coding tasks parallelize less than research does — if subtasks are not genuinely independent, do them yourself.
+
+**Delegate when:** the side task would flood the main context with search results, logs, or file dumps you won't reference again · the material exceeds one context window · several independent subtasks can run at once · you want an independent perspective on your own output.
+
+**Always name the model when spawning. Never inherit the session model by default.** Route the cheapest model that can do the job:
+
+| Work | Tier | Claude Code | Codex | Grok Build |
+|---|---|---|---|---|
+| Search, exploration, file location | cheapest | `haiku` | `gpt-5.x-mini` | cheapest available |
+| Clear-cut implementation or bugfix | mid | `sonnet` | mid `gpt-5.x` | mid |
+| Complex, ambiguous, or high-stakes work | top | `opus` | top `gpt-5.x` | top |
+
+Never spawn a peer-or-higher tier for routine work. As orchestrator you decompose, delegate, verify, and synthesize — direct edits are for one-liners.
+
+**Sizing.** 1 focused task → one subagent. 2 → one builds, one reviews. 3-5 → parallel work across layers. Past 5 the lead spends more time coordinating than the team saves; run rounds instead.
+
+**Check overlap before spawning in parallel.** Two agents editing the same file will conflict. Group non-overlapping work as parallel, chain the rest sequentially, or isolate agents in separate worktrees when they must touch the same paths. Send independent tool calls in one message so they run concurrently.
+
+**Every delegation carries** the objective, the exact output format, which tools or paths to use, and where the task ends. Vague delegation buys vague work at full price. Results come back as summaries, not transcripts — the subagent keeps its raw exploration in its own context.
+
+**Never adopt a delegated result on trust.** Verify by measurement: read the diff, run the tests, run the linter. A subagent reporting success is a claim, not evidence.
+
+**For high-stakes changes** (auth, payments, migrations, anything irreversible), spawn independent reviewers in fresh contexts. A reviewer that sees only the diff and the criteria — not the reasoning that produced it — judges the result on its own terms. Two or three perspectives beat one, and disagreement is the signal.
+
+---
+
+## 8. Communication
 
 - **User-facing text in formal Korean (존댓말).** Code, comments, commit messages, and identifiers follow each repo's convention.
 - Direct, not diplomatic. "This won't scale because X" beats "That's interesting, but have you considered...".
@@ -93,7 +121,7 @@ For every task: state success criteria → write the verification → run it →
 
 ---
 
-## 8. When to ask, when to proceed
+## 9. When to ask, when to proceed
 
 **Ask first:** two materially different interpretations · load-bearing or versioned targets (migrations, deploy branches) · credentials or production resources · git push (deploys may trigger; approval is per-push, never carried over).
 
@@ -101,7 +129,7 @@ For every task: state success criteria → write the verification → run it →
 
 ---
 
-## 9. Self-improvement loop
+## 10. Self-improvement loop
 
 After every session where the agent did something wrong: if a rule was missing, add it under Learnings below, concretely ("Always use X for Y"). If a rule was ignored, tighten it or move it up. Prune every few weeks — bloated rule files get ignored wholesale. Keep this file under ~150 lines.
 
@@ -113,4 +141,4 @@ Per-repo specifics (stack, commands, layout, forbidden areas) belong in **each r
 
 ---
 
-*Derived from [FerroxLabs/agents-md](https://github.com/FerroxLabs/agents-md) (MIT, Sean Donahoe — Karpathy's four principles, Boris Cherny's workflow) and [drona23/claude-token-efficient](https://github.com/drona23/claude-token-efficient) (MIT). Customized: global deployment, token discipline section, Korean responses, per-repo commit conventions.*
+*Derived from [FerroxLabs/agents-md](https://github.com/FerroxLabs/agents-md) (MIT, Sean Donahoe — Karpathy's four principles, Boris Cherny's workflow) and [drona23/claude-token-efficient](https://github.com/drona23/claude-token-efficient) (MIT). Section 7 draws on Anthropic's [multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system), [building effective agents](https://www.anthropic.com/engineering/building-effective-agents), and [Claude Code subagent docs](https://code.claude.com/docs/en/sub-agents), plus team-sizing thresholds from [rohitg00/pro-workflow](https://github.com/rohitg00/pro-workflow) and pre-spawn conflict grouping from [catlog22/Claude-Code-Workflow](https://github.com/catlog22/Claude-Code-Workflow).*
